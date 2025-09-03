@@ -57,7 +57,7 @@ namespace CoreSPA.Migrations
                 name: "Features",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    FeatureId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
@@ -65,7 +65,7 @@ namespace CoreSPA.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Features", x => x.Id);
+                    table.PrimaryKey("PK_Features", x => x.FeatureId);
                     table.ForeignKey(
                         name: "FK_Features_Products_ProductId",
                         column: x => x.ProductId,

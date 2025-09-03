@@ -6,7 +6,7 @@ namespace CoreSPA.Models
     public class Feature
     {
         [Key]
-        public int Id { get; set; }
+        public int FeatureId { get; set; }
 
         [Required]
         public int ProductId { get; set; }

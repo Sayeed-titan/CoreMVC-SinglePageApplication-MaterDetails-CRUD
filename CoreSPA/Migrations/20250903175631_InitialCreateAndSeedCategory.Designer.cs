@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreSPA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250903174812_InitialCreateAndSeedCategory")]
+    [Migration("20250903175631_InitialCreateAndSeedCategory")]
     partial class InitialCreateAndSeedCategory
     {
         /// <inheritdoc />
@@ -62,11 +62,11 @@ namespace CoreSPA.Migrations
 
             modelBuilder.Entity("CoreSPA.Models.Feature", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("FeatureId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeatureId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -81,7 +81,7 @@ namespace CoreSPA.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("FeatureId");
 
                     b.HasIndex("ProductId");
 

@@ -59,11 +59,11 @@ namespace CoreSPA.Migrations
 
             modelBuilder.Entity("CoreSPA.Models.Feature", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("FeatureId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeatureId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -78,7 +78,7 @@ namespace CoreSPA.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("FeatureId");
 
                     b.HasIndex("ProductId");
 

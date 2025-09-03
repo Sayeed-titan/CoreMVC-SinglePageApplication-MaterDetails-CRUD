@@ -11,28 +11,25 @@ namespace CoreSPA.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _env;
 
-        public ProductController (ApplicationDbContext context, IWebHostEnvironment env)
+        public ProductController(ApplicationDbContext context, IWebHostEnvironment env)
         {
             _context = context;
             _env = env;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var products = await _context.Products
-                .Include(p => p.Category)
                 .Include(p => p.Features)
+                .Include(p => p.Category)
                 .Select(p => new ProductVM
                 {
                     ProductId = p.ProductId,
-                    CategoryId = p.CategoryId,
                     Name = p.Name,
+                    CategoryId = p.CategoryId,
                     Price = p.Price,
                     Stock = p.Stock,
                     PurchaseDate = p.PurchaseDate,
@@ -40,33 +37,31 @@ namespace CoreSPA.Controllers
                     Brand = p.Brand,
                     Description = p.Description,
                     Photo = p.Photo,
-                    Features = p.Features.Select( f=> new FeatureVM 
-                    { 
+                    Features = p.Features.Select(f => new FeatureVM
+                    {
                         FeatureId = f.FeatureId,
                         Name = f.Name,
                         Description = f.Description
-                    })
-                    .ToList()
-                })
-                .ToListAsync();
+                    }).ToList()
+                }).ToListAsync();
 
             return Json(products);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet]
         public async Task<IActionResult> GetById(int id)
         {
             var product = await _context.Products
                 .Include(p => p.Features)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
-            if( product is null) return NotFound();
+            if (product == null) return NotFound();
 
             var vm = new ProductVM
             {
                 ProductId = product.ProductId,
-                CategoryId = product.CategoryId,
                 Name = product.Name,
+                CategoryId = product.CategoryId,
                 Price = product.Price,
                 Stock = product.Stock,
                 PurchaseDate = product.PurchaseDate,
@@ -74,7 +69,7 @@ namespace CoreSPA.Controllers
                 Brand = product.Brand,
                 Description = product.Description,
                 Photo = product.Photo,
-                Features = product.Features.Select( f => new FeatureVM 
+                Features = product.Features.Select(f => new FeatureVM
                 {
                     FeatureId = f.FeatureId,
                     Name = f.Name,
@@ -85,18 +80,14 @@ namespace CoreSPA.Controllers
             return Json(vm);
         }
 
-        private async Task<string> SaveImage (IFormFile file, string folder)
+        private async Task<string> SaveImage(IFormFile file, string folder)
         {
             var allowedMimes = new[] { "image/jpeg", "image/png", "image/webp" };
-            if (!allowedMimes.Contains(file.ContentType))
-                throw new Exception("Only JPG/PNG/WEBP allowed.");
-
-            if (file.Length > 2 * 1024 * 1024)
-                throw new Exception("Max 2MB.");
+            if (!allowedMimes.Contains(file.ContentType)) throw new Exception("Only JPG/PNG/WEBP allowed.");
+            if (file.Length > 2 * 1024 * 1024) throw new Exception("Max 2MB.");
 
             var uploads = Path.Combine(_env.WebRootPath, folder);
-            if( !Directory.Exists(uploads))
-                Directory.CreateDirectory(uploads);
+            if (!Directory.Exists(uploads)) Directory.CreateDirectory(uploads);
 
             var ext = Path.GetExtension(file.FileName);
             var fileName = $"{Guid.NewGuid()}{ext}";
@@ -109,19 +100,24 @@ namespace CoreSPA.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save (ProductVM vm)
+        public async Task<IActionResult> Save([FromForm] ProductVM vm)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(new { success = false, errors });
+            }
 
             using var trx = await _context.Database.BeginTransactionAsync();
-
             try
             {
                 Product product;
 
-                if(vm.ProductId > 0)
+                if (vm.ProductId > 0)
                 {
+                    // Update
                     product = await _context.Products
                         .Include(p => p.Features)
                         .FirstAsync(p => p.ProductId == vm.ProductId);
@@ -137,6 +133,7 @@ namespace CoreSPA.Controllers
                 }
                 else
                 {
+                    // Create
                     product = new Product
                     {
                         Name = vm.Name,
@@ -147,18 +144,19 @@ namespace CoreSPA.Controllers
                         IsAvailable = vm.IsAvailable,
                         Brand = vm.Brand,
                         Description = vm.Description,
-                        Features = new List<Feature>()                        
+                        Features = new List<Feature>()
                     };
-
                     _context.Products.Add(product);
                 }
 
-                if(vm.PhotoFile != null)
+                // Handle image
+                if (vm.PhotoFile != null)
                 {
                     string fileName = await SaveImage(vm.PhotoFile, "products");
                     product.Photo = fileName;
                 }
 
+                // Features
                 product.Features.Clear();
                 foreach (var f in vm.Features)
                 {
@@ -174,19 +172,18 @@ namespace CoreSPA.Controllers
 
                 return Json(new { success = true });
             }
-            catch ( Exception ex)
+            catch (Exception ex)
             {
                 await trx.RollbackAsync();
-                return BadRequest( new { success = false, message = ex.Message } );                
+                return BadRequest(new { success = false, message = ex.Message });
             }
-
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete (int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var product = await _context.Products
-                .Include( p => p.Features)
+                .Include(p => p.Features)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             if (product == null) return NotFound();

@@ -31,9 +31,9 @@ namespace CoreSPA.Models
         [Required(ErrorMessage = "Purchase date is required")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "0:{yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime PurchaseDate { get; set; } 
+        public DateTime PurchaseDate { get; set; }
 
-        public bool IsAvailable { get; set; }
+        public bool IsAvailable { get; set; } = true;
 
         [StringLength(100, ErrorMessage = "Brand cannot exceed 100 characters")]
         public string? Brand { get; set; }

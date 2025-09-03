@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreSPA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250903175631_InitialCreateAndSeedCategory")]
+    [Migration("20250903201951_InitialCreateAndSeedCategory")]
     partial class InitialCreateAndSeedCategory
     {
         /// <inheritdoc />

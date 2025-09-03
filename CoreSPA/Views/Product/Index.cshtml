@@ -1,0 +1,278 @@
+﻿@{
+    ViewData["Title"] = "Product Management";
+}
+
+<h1 class="text-center">Product Management</h1>
+<hr />
+
+<div class="container-fluid">
+    <form id="productForm" enctype="multipart/form-data">
+        <input type="hidden" id="ProductId" name="ProductId" value="0" />
+
+        <div class="row px-5">
+            <!-- Product Info -->
+            <div class="col-md-6">
+                <h4>Product Info</h4>
+                <div class="form-group mb-2">
+                    <label>Name</label>
+                    <input type="text" id="Name" name="Name" class="form-control" />
+                </div>
+                <div class="form-group mb-2">
+                    <label>Category</label>
+                    <select id="CategoryId" name="CategoryId" class="form-select">
+                        <option value="">-- Select Category --</option>
+                        <option value="1">Laptop</option>
+                        <option value="2">Smartphone</option>
+                        <option value="3">Tablet</option>
+                    </select>
+                </div>
+                <div class="form-group mb-2">
+                    <label>Price</label>
+                    <input type="number" id="Price" name="Price" class="form-control" />
+                </div>
+                <div class="form-group mb-2">
+                    <label>Stock</label>
+                    <input type="number" id="Stock" name="Stock" class="form-control" />
+                </div>
+                <div class="form-group mb-2">
+                    <label>Purchase Date</label>
+                    <input type="date" id="PurchaseDate" name="PurchaseDate" class="form-control" />
+                </div>
+                <!-- Checkbox fix -->
+                <div class="form-check mb-2">
+                    <input type="checkbox" id="IsAvailable" name="IsAvailable" class="form-check-input" value="true" />
+                    <input type="hidden" name="IsAvailable" value="false" />
+                    <label class="form-check-label">Available</label>
+                </div>
+
+
+                <div class="form-group mb-2">
+                    <label>Brand</label>
+                    <input type="text" id="Brand" name="Brand" class="form-control" />
+                </div>
+                <div class="form-group mb-2">
+                    <label>Description</label>
+                    <textarea id="Description" name="Description" class="form-control"></textarea>
+                </div>
+                <div class="form-group mb-2">
+                    <label>Photo</label>
+                    <input type="file" id="PhotoFile" name="PhotoFile" class="form-control" />
+                    <div class="mt-2">
+                        <img id="PhotoPreview" src="" alt="No Image" class="img-thumbnail" style="max-height:120px;" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Save</button>
+                <button type="button" class="btn btn-secondary mt-2" id="btnReset">Reset</button>
+            </div>
+
+            <!-- Features -->
+            <div class="col-md-6">
+                <h4>Product Features</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Feature Name</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="featureContainer">
+                        <tr>
+                            <td><input type="text" name="Features[0].Name" class="form-control" /></td>
+                            <td><input type="text" name="Features[0].Description" class="form-control" /></td>
+                            <td><button type="button" class="btn btn-success btnAddFeature">+</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+
+<hr />
+<h3 class="text-center">List of Products</h3>
+<hr />
+
+<table class="table table-striped" id="productTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Purchase Date</th>
+            <th>Available</th>
+            <th>Photo</th>
+            <th>Features</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section Scripts {
+    <script>
+                let featureCount = 0;
+
+        // Set default no-image placeholder on form load
+        const noImageUrl = '/images/no-image.jpg'; 
+        $('#PhotoPreview').attr('src', noImageUrl);
+
+
+        // PHOTO PREVIEW WHEN SELECTING A FILE
+        $('#PhotoFile').change(function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    $('#PhotoPreview').attr('src', ev.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // revert to default placeholder if file is removed
+                $('#PhotoPreview').attr('src', noImageUrl);
+            }
+        });
+
+        // Function to add a new feature row
+        function addFeatureRow(name = '', description = '', isLast = true) {
+            let btn = isLast ? `<button type="button" class="btn btn-success btnAddFeature">+</button>` : `<button type="button" class="btn btn-danger btnRemoveFeature">X</button>`;
+            let row = `
+            <tr>
+                <td><input type="text" name="Features[${featureCount}].Name" value="${name}" class="form-control"/></td>
+                <td><input type="text" name="Features[${featureCount}].Description" value="${description}" class="form-control"/></td>
+                <td>${btn}</td>
+            </tr>`;
+            $('#featureContainer').append(row);
+            featureCount++;
+        }
+
+        // Initial empty row for new product
+        $('#featureContainer').html('');
+        addFeatureRow('', '', true);
+
+        // Add Feature dynamically
+        $(document).on('click', '.btnAddFeature', function () {
+            // Change current button to remove
+            $(this).removeClass('btn-success btnAddFeature').addClass('btn-danger btnRemoveFeature').text('X');
+            addFeatureRow('', '', true); // add new empty row with Add button
+        });
+
+        // Remove Feature row
+        $(document).on('click', '.btnRemoveFeature', function () {
+            $(this).closest('tr').remove();
+        });
+
+        // Load Products in table
+        function loadProducts() {
+            $.getJSON('/Product/GetAll', function (data) {
+                let rows = '';
+                data.forEach(p => {
+                    rows += `
+                    <tr data-id="${p.productId}">
+                        <td>${p.name}</td>
+                        <td>${p.categoryId}</td>
+                        <td>${p.price}</td>
+                        <td>${p.stock}</td>
+                        <td>${p.purchaseDate.split('T')[0]}</td>
+                        <td class="text-center">
+                          ${p.isAvailable ? '<span style="color:green">In Stock</span>' : '<span style="color:red">Out of Stock</span>'}
+                        </td>
+
+                          <td>
+                                <img src="${p.photo ? p.photo : '/images/no-image.jpg'}" class="img-thumbnail" style="max-height:60px;" />
+                           </td>
+
+                        <td><ul>${p.features.map(f => `<li>${f.name} - ${f.description}</li>`).join('')}</ul></td>
+                        <td>
+                            <button class="btn btn-sm btn-info btnEdit">Edit</button>
+                            <button class="btn btn-sm btn-danger btnDelete">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                $('#productTable tbody').html(rows);
+            });
+        }
+
+        loadProducts();
+
+        // Save Product
+        $('#productForm').submit(function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            $.ajax({
+                url: '/Product/Save',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+                    loadProducts();
+                    resetForm();
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseJSON);
+                }
+            });
+        });
+
+        // Edit Product
+        $(document).on('click', '.btnEdit', function () {
+            let id = $(this).closest('tr').data('id');
+            $.getJSON(`/Product/GetById?id=${id}`, function (p) {
+                $('#ProductId').val(p.productId);
+                $('#Name').val(p.name);
+                $('#CategoryId').val(p.categoryId);
+                $('#Price').val(p.price);
+                $('#Stock').val(p.stock);
+                $('#PurchaseDate').val(p.purchaseDate.split('T')[0]);
+                $('#IsAvailable').prop('checked', p.isAvailable);
+                $('#Brand').val(p.brand);
+                $('#Description').val(p.description);
+                $('#PhotoPreview').attr('src', p.photo ? '/' + p.photo : '');
+
+                // Reset feature container
+                $('#featureContainer').html('');
+                featureCount = 0;
+
+                // Add existing features
+                p.features.forEach((f, index) => {
+                    let isLast = index === p.features.length - 1; // last feature gets Add button
+                    addFeatureRow(f.name, f.description, isLast);
+                });
+
+                // If no features exist, add an empty row with Add button
+                if (p.features.length === 0) addFeatureRow('', '', true);
+            });
+        });
+
+        // Delete Product
+        $(document).on('click', '.btnDelete', function () {
+            let id = $(this).closest('tr').data('id');
+            if (confirm('Are you sure?')) {
+                $.post('/Product/Delete', { id: id }, function () {
+                    loadProducts();
+                });
+            }
+        });
+
+        // Reset Form
+        function resetForm() {
+            $('#productForm')[0].reset();
+            $('#ProductId').val(0);
+
+            // Set Photo preview back to default placeholder
+            $('#PhotoPreview').attr('src', '/images/no-image.jpg');
+
+            // Reset feature container
+            $('#featureContainer').html('');
+            featureCount = 0;
+            addFeatureRow('', '', true);
+        }
+
+        $('#btnReset').click(resetForm);
+
+
+
+    </script>
+}

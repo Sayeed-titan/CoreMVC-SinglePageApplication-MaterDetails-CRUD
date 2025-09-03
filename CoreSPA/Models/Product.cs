@@ -7,6 +7,7 @@
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
         public decimal Price { get; set; }
+        public int StockId { get; set; }
         public DateTime PurchaseDate { get; set; }
         public bool IsAvailable { get; set; }
         public string? Brand { get; set; }

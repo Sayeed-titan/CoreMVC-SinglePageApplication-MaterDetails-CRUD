@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoreSPA.Models
@@ -20,6 +21,7 @@ namespace CoreSPA.Models
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage ="Price must be positive")]
+        [Precision(18,2)]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Stock quantity is required")]

@@ -26,7 +26,7 @@ namespace CoreSPA.Models
 
         [Required(ErrorMessage = "Stock quantity is required")]
         [Range(0, int.MaxValue, ErrorMessage = "Stock cannot be negative")]
-        public int StockId { get; set; }
+        public int Stock { get; set; }
 
         [Required(ErrorMessage = "Purchase date is required")]
         [DataType(DataType.Date)]

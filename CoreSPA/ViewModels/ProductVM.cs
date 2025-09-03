@@ -14,8 +14,10 @@ namespace CoreSPA.ViewModels
         public int CategoryId { get; set; }
 
         [Required]
-        [Range(0, double.MaxValue)]
+        [Range(0, 999999)]
         public decimal Price { get; set; }
+
+        public int Stock {  get; set; }
 
         [Required]
         [DataType(DataType.Date)]

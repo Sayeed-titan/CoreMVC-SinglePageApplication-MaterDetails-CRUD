@@ -28,6 +28,13 @@ namespace CoreSPA.Data
                                .HasForeignKey(p => p.ProductId)
                                .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Category>().HasData(
+                new Category { CategoryId = 1, Name = "Laptop"},
+                new Category { CategoryId = 2, Name = "SmartPhone"},
+                new Category { CategoryId = 3, Name = "Tablet"}               
+             );
+
+
             base.OnModelCreating(modelBuilder);
         }
     }

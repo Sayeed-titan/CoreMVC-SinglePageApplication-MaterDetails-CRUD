@@ -7,7 +7,7 @@ namespace CoreSPA.Models
     public class Product
     {
         [Key]
-        public int Id { get; set; }
+        public int ProductId { get; set; }
 
         [Required(ErrorMessage ="Product name is required")]
         [StringLength(150, ErrorMessage = "Product name cannot exceed 150 characters")]

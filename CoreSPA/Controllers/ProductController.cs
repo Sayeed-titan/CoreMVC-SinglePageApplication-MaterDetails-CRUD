@@ -1,5 +1,7 @@
 ﻿using CoreSPA.Data;
+using CoreSPA.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreSPA.Controllers
 {
@@ -18,5 +20,18 @@ namespace CoreSPA.Controllers
         {
             return View();
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetAll()
+        //{
+        //    var products = await _context.Products
+        //        .Include(p => p.Category)
+        //        .Include(p => p.Features)
+        //        .Select(p => new ProductVM
+        //        {
+        //            ProductId = p.Id
+        //        })
+        //        .ToListAsync();
+        //}
     }
 }

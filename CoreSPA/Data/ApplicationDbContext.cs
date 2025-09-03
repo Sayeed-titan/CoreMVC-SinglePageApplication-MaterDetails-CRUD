@@ -28,7 +28,6 @@ namespace CoreSPA.Data
                                .HasForeignKey(p => p.ProductId)
                                .OnDelete(DeleteBehavior.Cascade);
 
-
             base.OnModelCreating(modelBuilder);
         }
     }

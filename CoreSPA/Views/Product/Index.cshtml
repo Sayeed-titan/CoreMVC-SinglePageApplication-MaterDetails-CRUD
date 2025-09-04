@@ -3,7 +3,13 @@
 }
 
 <h1 class="text-center">Product Management</h1>
+<div class="text-end my-3">
+    <button type="button" class="btn rounded-pill shadow-sm btn-outline-info border-2" id="btnShowProducts">
+        Show Products
+    </button>
+</div>
 <hr />
+
 
 <div class="container-fluid">
     <form id="productForm" enctype="multipart/form-data">
@@ -44,8 +50,6 @@
                     <input type="hidden" name="IsAvailable" value="false" />
                     <label class="form-check-label">Available</label>
                 </div>
-
-
                 <div class="form-group mb-2">
                     <label>Brand</label>
                     <input type="text" id="Brand" name="Brand" class="form-control" />
@@ -61,14 +65,14 @@
                         <img id="PhotoPreview" src="" alt="No Image" class="img-thumbnail" style="max-height:120px;" />
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary mt-2">Save</button>
-                <button type="button" class="btn btn-secondary mt-2" id="btnReset">Reset</button>
+                <button type="submit" class="btn btn-primary mt-2 w-25">Save</button>
+                <button type="button" class="btn btn-secondary mt-2 w-25" id="btnReset">Reset</button>
             </div>
 
             <!-- Features -->
             <div class="col-md-6">
                 <h4>Product Features</h4>
-                <table class="table table-bordered">
+                <table class="table table-borderless">
                     <thead>
                         <tr>
                             <th>Feature Name</th>
@@ -93,6 +97,8 @@
 <h3 class="text-center">List of Products</h3>
 <hr />
 
+<div id="productListSection">
+
 <table class="table table-striped" id="productTable">
     <thead>
         <tr>
@@ -109,6 +115,9 @@
     </thead>
     <tbody></tbody>
 </table>
+
+</div>
+
 
 @section Scripts {
     <script>
@@ -272,6 +281,12 @@
 
         $('#btnReset').click(resetForm);
 
+                // Scroll to products table
+        $('#btnShowProducts').click(function () {
+            $('html, body').animate({
+                scrollTop: $("#productListSection").offset().top
+            }, 600); // 600ms smooth scroll
+        });
 
 
     </script>

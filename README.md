@@ -1,8 +1,8 @@
 # 🛍️ CoreSPA — Product & Category Management
 
-[![.NET](https://img.shields.io/badge/.NET-9.0-blueviolet?logo=dotnet)](https://dotnet.microsoft.com/) 
+[![.NET](https://img.shields.io/badge/.NET-8.0-blueviolet?logo=dotnet)](https://dotnet.microsoft.com/) 
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap)](https://getbootstrap.com/) 
-[![Entity Framework Core](https://img.shields.io/badge/EF%20Core-9.0-512BD4?logo=nuget)](https://learn.microsoft.com/en-us/ef/core/)  
+[![Entity Framework Core](https://img.shields.io/badge/EF%20Core-8.0-512BD4?logo=nuget)](https://learn.microsoft.com/en-us/ef/core/)  
 
 CoreSPA is a web-based **Product & Category Management system** built with **ASP.NET Core 9**, **Entity Framework Core**, and **Bootstrap 5**.  
 It enables efficient management of products, categories, and product features through a **modern, responsive, and user-friendly interface**.  
@@ -45,7 +45,7 @@ This project demonstrates:
 
 ## 🛠️ Tech Stack
 
-- **Backend:** ASP.NET Core 9 (C#), Entity Framework Core  
+- **Backend:** ASP.NET Core 8 (C#), Entity Framework Core  
 - **Frontend:** Razor Pages / MVC, Bootstrap 5, jQuery 3.6  
 - **Database:** SQL Server / LocalDb  
 - **Other:** AJAX, File Upload, Partial Views, Toast Notifications  
@@ -55,7 +55,7 @@ This project demonstrates:
 ## ⚙️ Setup Instructions
 
 ### 📋 Prerequisites
-- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)  
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)  
 - SQL Server (or LocalDb)  
 - Visual Studio 2022 or later  
 
@@ -64,3 +64,6 @@ This project demonstrates:
    ```bash
    git clone https://github.com/Sayeed-titan/CoreMVC-SinglePageApplication-MaterDetails-CRUD.git
    cd CoreSPA
+2. Update the connection string in appsettings.json for your SQL Server instance.
+3. Apply EF Core migrations:
+dotnet ef database update

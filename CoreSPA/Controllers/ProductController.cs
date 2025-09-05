@@ -54,6 +54,7 @@ namespace CoreSPA.Controllers
         {
             var product = await _context.Products
                 .Include(p => p.Features)
+                .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             if (product == null) return NotFound();

@@ -68,26 +68,29 @@
             }
 
             //Save
-            $('#categoryForm').submit(function(e){
-                e.preventDefault();
+        $('#categoryForm').submit(function(e){
+            e.preventDefault();
 
-                var formData = new FormData(this);
+            var formData = new FormData(this);
 
-                $.ajax({
-                    url: '/Category/Save',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(){
-                        loadCategories();
-                        resetForm();
-                    },
-                    error: function(err){
-                        alert('Errror: ' + JSON.stringify (err.responseJSON ));
-                    }
-                });
+            $.ajax({
+                url: '/Category/Save',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(){
+                    loadCategories();
+                    resetForm();
+                    UI.toast("Category saved successfully!"); 
+                },
+                error: function(err){
+                    const message = err.responseJSON?.message || JSON.stringify(err.responseJSON) || 'Error saving category';
+                    UI.toast(message, 'error'); 
+                }
             });
+        });
+
 
             //Reset
             function resetForm(){
@@ -105,25 +108,31 @@
                 });
             });
 
-            // Delete
-            $('#categoryTable').on('click', '.btn-delete', function () {
-                if (!confirm('Are you sure you want to delete this category?')) return;
+        // Delete category
+        $('#categoryTable').on('click', '.btn-delete', function () {
+            var id = $(this).data('id');
 
-                var id = $(this).data('id');
-                $.post('/Category/Delete/' + id, function (res) {
-                    if (res.success) {
+            UI.confirm("Are you sure you want to delete this category?", function() {
+                $.post('/Category/Delete/' + id, function(res){
+                    if(res.success){
                         loadCategories();
+                        UI.toast("Category deleted successfully!");
                     }
-                }).fail(function (xhr) {
-                    let err = xhr.responseJSON?.message || "Error deleting category.";
-                    alert(err);
+                }).fail(function(xhr){
+                    UI.toast(xhr.responseJSON?.message || "Error deleting category", 'error');
                 });
             });
+        });
 
+        // Save success toast
+        UI.toast("Category saved successfully!");
 
         })
 
 
 
+
     </script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
 }

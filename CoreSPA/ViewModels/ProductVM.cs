@@ -11,7 +11,10 @@ namespace CoreSPA.ViewModels
         public string Name { get; set; } = null!;
 
         [Required]
-        public int CategoryId { get; set; }
+        public int CategoryId { get; set; } 
+
+        [StringLength(100)]
+        public string? CategoryName { get; set; }
 
         [Required]
         [Range(0, 999999)]

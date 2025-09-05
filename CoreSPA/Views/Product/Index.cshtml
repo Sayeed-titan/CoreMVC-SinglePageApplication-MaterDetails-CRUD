@@ -27,10 +27,7 @@
                 <div class="form-group mb-2">
                     <label>Category</label>
                     <select class="form-select" id="CategoryId" name="CategoryId">
-                        <option disabled selected>Select a category</option>
-                        <option value="1">Laptop</option>
-                        <option value="2">Smartphone</option>
-                        <option value="3">Tablet</option>
+                        <option disabled selected value="">Select a category</option>
                     </select>
                 </div>
                 <div class="form-group mb-2">
@@ -138,15 +135,31 @@
             todayHighlight: true
           });
 
-        $('#Description').on('input', function () {
-          $('#descCounter').text(`${this.value.length} / 500 characters`);
-        });
+            $('#Description').on('input', function () {
+              $('#descCounter').text(`${this.value.length} / 500 characters`);
+            });
 
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-          return new bootstrap.Tooltip(tooltipTriggerEl);
-        });    
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+              return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Load categories dynamically
+            function loadCategoriesDropdown(){
+                $.getJSON('/Category/GetAll', function(data){
+                    let options = '<option disabled selected value="">Select a category</option>';
+                    data.forEach(c => {
+                        options += `<option value="${c.categoryId}">${c.name}</option>`;
+                    });
+                    $('#CategoryId').html(options); 
+                });
+            }
+
+            loadCategoriesDropdown();
+
          });
+
+
 
          //Save Product
          $('#productForm').submit(function(e){

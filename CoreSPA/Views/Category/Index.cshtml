@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Category Management";
+}
+
+<div class="container">
+    <h2 class="text-center text-success">Category Management</h2>
+    <hr />
+
+    <!-- Category Form --> 
+    <form id="categoryForm">
+        <input type="hidden" id="CategoryId" name="CategoryId" value="0"/>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Category Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" required/>
+        </div>
+
+        
+        <div class="mt-3 d-flex gap-3">
+            <button type="submit" class="btn btn-success">S A V E</button>
+            <button type="button" class="btn btn-secondary">R E S E T</button>
+        </div>
+
+    </form>
+
+
+
+    <!-- Table -->
+    <h4 class="text-center mt-3 mb-3">List of Categories</h4>
+    <table class="table table-bordered mt-3" id="categoryTable">
+        <thead>
+            <tr >
+                <th>Sl.</th>
+                <th>Name</th>
+                <th style="width: 150px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
+

@@ -288,10 +288,21 @@
                     //here last features get add button
                     addFeatureRow(f.name, f.description, isLast );
                 });
+                //if no features exist, add an expty row with Add Button
+                if(p.features.length === 0) addFeatureRow('', '', true);
 
             });
         });
 
+        //Delete Product
+        $(document).on('click', '.btnDelete', function(){
+            let id = $(this).closest('tr').data('id');
+            if(confirm('Are you sure?')){
+                $.post('/Product/Delete', {id: id}, function(){
+                    loadProducts();
+                });
+            }
+        });
 
     </script>
 

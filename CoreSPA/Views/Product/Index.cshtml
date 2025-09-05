@@ -224,7 +224,10 @@
             addFeatureRow('', '', true);
         });
 
-
+        //Remove row
+        $(document).on('click', '.btnRemoveFeature', function(){
+            $(this).closest('tr').remove();
+        });
 
     </script>
 

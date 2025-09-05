@@ -15,6 +15,8 @@
 
 <div class="container-fluid mt-4">
     <form id="productForm" enctype="multipart/form-data">
+        <input type="hidden" id="ProductId" name="ProductId" value="0" />
+
         <div class="row">
             <div class="col-md-6">
                 <h4>Product Info</h4>
@@ -78,7 +80,7 @@
                 </div>                
                 <div class="d-flex justify-content-between mt-2">
                     <button type="submit" class="btn btn-success w-25 mt-2">S A V E</button>
-                    <button type="button" class="btn btn-secondary w-25 mt-2">R E S E T</button>
+                    <button type="button" class="btn btn-secondary w-25 mt-2 " id="btnReset">R E S E T</button>
                 </div>
 
             </div>
@@ -146,7 +148,7 @@
         });    
          });
 
-
+         //Save Product
          $('#productForm').submit(function(e){
              e.preventDefault();
              let formData = new FormData(this);
@@ -157,7 +159,8 @@
                  processData: false,
                  contentType: false,
                  success: function(){
-                     alert('Saved product successfully!')
+                     loadProducts();
+                     resetForm();
                  },
                  error: function(xhr){
                      console.log(xhr.response.JSON);
@@ -303,6 +306,22 @@
                 });
             }
         });
+
+        // Reset Form
+        function resetForm() {
+            $('#productForm')[0].reset();
+            $('#ProductId').val(0);
+
+            // Set Photo preview back to default placeholder
+            $('#PhotoPreview').attr('src', '/images/no-image.jpg');
+
+            // Reset feature container
+            $('#featureContainer').html('');
+            featureCount = 0;
+            addFeatureRow('', '', true);
+        }
+
+        $('#btnReset').click(resetForm);
 
     </script>
 

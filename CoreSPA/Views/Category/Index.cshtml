@@ -18,7 +18,7 @@
         
         <div class="mt-3 d-flex gap-3">
             <button type="submit" class="btn btn-success">S A V E</button>
-            <button type="button" class="btn btn-secondary">R E S E T</button>
+            <button type="button" class="btn btn-secondary" id="btnReset">R E S E T</button>
         </div>
 
     </form>
@@ -45,9 +45,9 @@
 
         $(document).ready(function(){
 
-                loadCategoris();
+                loadCategories();
 
-                 function loadCategoris(){
+                 function loadCategories(){
                 $.getJSON('/Category/GetAll', function (data){
                     let rows = '';
                     let count = 1;
@@ -58,7 +58,7 @@
                                 <td>${c.name}</td>
                                 <td>
                                     <button class="btn btn-info text-white btn-edit" data-id="${c.categoryId}"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn btn-danger btn-delete"><i class="bi bi-trash" data-id="${c.categoryId}"></i></button>
+                                    <button class="btn btn-danger btn-delete" data-id="${c.categoryId}"><i class="bi bi-trash"></i></button>
                                 </td>
                             </tr>
                         `;
@@ -80,8 +80,8 @@
                     processData: false,
                     contentType: false,
                     success: function(){
-                        loadCategoris();
-                        //reset form
+                        loadCategories();
+                        resetForm();
                     },
                     error: function(err){
                         alert('Errror: ' + JSON.stringify (err.responseJSON ));
@@ -89,7 +89,36 @@
                 });
             });
 
+            //Reset
+            function resetForm(){
+                $('#CategoryId').val(0);
+                $('#Name').val('');
+            }
+            $('#btnReset').click(resetForm);
 
+            //Edit
+            $('#categoryTable').on('click', '.btn-edit', function () {
+                var id = $(this).data('id');
+                $.getJSON('/Category/GetById/' + id, function (data) {
+                    $('#CategoryId').val(data.categoryId);
+                    $('#Name').val(data.name);
+                });
+            });
+
+            // Delete
+            $('#categoryTable').on('click', '.btn-delete', function () {
+                if (!confirm('Are you sure you want to delete this category?')) return;
+
+                var id = $(this).data('id');
+                $.post('/Category/Delete/' + id, function (res) {
+                    if (res.success) {
+                        loadCategories();
+                    }
+                }).fail(function (xhr) {
+                    let err = xhr.responseJSON?.message || "Error deleting category.";
+                    alert(err);
+                });
+            });
 
 
         })

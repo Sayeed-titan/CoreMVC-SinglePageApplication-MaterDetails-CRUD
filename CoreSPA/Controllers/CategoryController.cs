@@ -76,27 +76,28 @@ namespace CoreSPA.Controllers
             return Json(new { success = true });
         }
 
-        //Delete
-        public async Task<IActionResult> Delete (int id)
+        // Delete
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
         {
             var category = await _context.Categories.FindAsync(id);
-            if (category == null) return NotFound();
+            if (category == null)
+                return NotFound();
 
-            //Check if the category has any associated products
-
-            bool hasProducts = await _context.Products.AnyAsync(p => p.CategoryId == id);
-
-            if (hasProducts)
+            // Check if any products use this category
+            bool inUse = await _context.Products.AnyAsync(p => p.CategoryId == id);
+            if (inUse)
             {
-                return BadRequest("Cannot delete category with associated products.");
+                return BadRequest(new { success = false, message = "Cannot delete category. It is being used in Products." });
             }
 
             _context.Categories.Remove(category);
-
             await _context.SaveChangesAsync();
 
             return Json(new { success = true });
         }
+
+
 
     }
 }

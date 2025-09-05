@@ -278,6 +278,17 @@
                 $('#Description').val(p.description);
                 $('#PhotoPreview').attr('src', p.photo? '/' + p.photo: '' );
 
+                //reset features
+                $('#featureContainer').html('');
+                featureCount = 0;
+
+                //add existing features
+                p.features.forEach((f, index) =>{
+                    let isLast = index === p.features.length - 1;
+                    //here last features get add button
+                    addFeatureRow(f.name, f.description, isLast );
+                });
+
             });
         });
 

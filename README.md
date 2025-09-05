@@ -64,6 +64,34 @@ This project demonstrates:
    ```bash
    git clone https://github.com/Sayeed-titan/CoreMVC-SinglePageApplication-MaterDetails-CRUD.git
    cd CoreSPA
-2. Update the connection string in appsettings.json for your SQL Server instance.
-3. Apply EF Core migrations:
+
+
+Update the connection string in appsettings.json for your SQL Server instance.
+
+Apply EF Core migrations:
+
 dotnet ef database update
+
+
+Run the project:
+
+dotnet run
+
+
+Open in browser:
+
+https://localhost:7008
+
+
+---
+
+### 🔑 Key Rules for Markdown
+- Always **open and close** triple backticks (```) for code blocks.  
+- Keep your steps (`1. 2. 3.`) outside of code fences.  
+- Use indentation only for code, not for text instructions.
+
+---
+
+👉 So the problem wasn’t HTML at all — it was just missing closing backticks in your code block.  
+
+Do you want me to take your **entire README draft** and give you one **fully corrected Markdown file** (ready to paste on GitHub without breaking anywhere)?

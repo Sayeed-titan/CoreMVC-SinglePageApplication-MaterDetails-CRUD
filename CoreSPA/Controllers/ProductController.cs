@@ -130,7 +130,7 @@ namespace CoreSPA.Controllers
                     product.Price = vm.Price;
                     product.Stock = vm.Stock;
                     product.PurchaseDate = vm.PurchaseDate;
-                    product.IsAvailable = vm.IsAvailable;
+                    product.IsAvailable = vm.Stock > 0; // stock > 0 means available
                     product.Brand = vm.Brand;
                     product.Description = vm.Description;
                 }
@@ -144,7 +144,7 @@ namespace CoreSPA.Controllers
                         Price = vm.Price,
                         Stock = vm.Stock,
                         PurchaseDate = vm.PurchaseDate,
-                        IsAvailable = vm.IsAvailable,
+                        IsAvailable = vm.Stock > 0,
                         Brand = vm.Brand,
                         Description = vm.Description,
                         Features = new List<Feature>()

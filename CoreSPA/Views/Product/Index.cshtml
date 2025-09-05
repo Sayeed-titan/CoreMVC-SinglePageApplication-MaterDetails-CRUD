@@ -93,19 +93,7 @@
                         </tr>
                     </thead>
                     <tbody id="featureContainer">
-                        <tr>
-                            <td>
-                                <input type="text" class="form-control" name="Features[0].Name" placeholder="Feature name"/>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="Features[0].Description" placeholder="Description" />
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-success btnAddFeature">
-                                    +
-                                </button>
-                            </td>
-                        </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -159,16 +147,6 @@
          });
 
 
-
-         // function loadProducts(){
-         //     $.get.JSON('/Product/GetAll', function(data){
-         //         let rows = '';
-                 
-         //     });
-         // }
-
-         // loadProducts();
-
          $('#productForm').submit(function(e){
              e.preventDefault();
              let formData = new FormData(this);
@@ -191,7 +169,60 @@
          const noImageUrl = '/images/no-image.jpg';
          $('#PhotoPreview').attr('src',noImageUrl);
 
+         // Change preview photo on file selection
+        $('#PhotoFile').change(function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    $('#PhotoPreview').attr('src', ev.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // revert to default placeholder if file is removed
+                $('#PhotoPreview').attr('src', noImageUrl);
+            }
+        });
 
+        // Feature Add or Remove
+
+        let featureCount =0;
+
+        //To add new feature row
+        function addFeatureRow(name = '', description = '', isLast = true){
+            let btn = isLast ? 
+            `
+                <button type="button" class="btn btn-success btnAddFeature">+</button>
+            `
+            :
+            `
+                <button type="button" class="btn btn-danger btnRemoveFeature">X</button>
+            `;
+            let row = 
+            `
+                <tr>
+                    <td>
+                        <input type="text" name="Features[${featureCount}].Name" value="${name}" class="form-control" placeholder="Feature name"/>
+                    </td>
+                    <td>
+                        <input type="text" name="Features[${featureCount}].Description" value="${description}" class="form-control" placeholder="Description"/>
+                    </td>
+                    <td>${btn}</td>
+                </tr>
+            `;
+            $('#featureContainer').append(row);
+            featureCount++;
+        }
+
+        // Initial empty row for new product
+        $('#featureContainer').html('');
+        addFeatureRow('', '', true);
+
+        //Add feature row
+        $(document).on('click', '.btnAddFeature', function (){
+            $(this).removeClass('btn-success btnAddFeature').addClass('btn-danger btnRemoveFeature').text('X');
+            addFeatureRow('', '', true);
+        });
 
 
 

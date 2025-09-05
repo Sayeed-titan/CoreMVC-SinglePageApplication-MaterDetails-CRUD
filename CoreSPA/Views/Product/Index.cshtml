@@ -27,10 +27,9 @@
                     <label>Category</label>
                     <select class="form-select" id="CategoryId" name="CategoryId">
                         <option disabled selected>Select a category</option>
-                        <option>Laptop</option>
-                        <option>Computer</option>
-                        <option>Smartphone</option>
-                        <option>Tablet</option>
+                        <option value="1">Laptop</option>
+                        <option value="2">Smartphone</option>
+                        <option value="3">Tablet</option>
                     </select>
                 </div>
                 <div class="form-group mb-2">
@@ -57,6 +56,7 @@
                 </div>
                 <div class="form-check mb-2">
                     <input type="checkbox" id="IsAvailable" name="IsAvailable" class="form-check-input" value="true"/>
+                    <input type="hidden" name="IsAvailable" value="false"/>
                     <label class="form-check-label">Availability</label>
                 </div>
                 <div class="form-group mb-2">
@@ -68,7 +68,7 @@
                         <i class="bi bi-info-circle" data-bs-toggle="tooltip" title="Add detailed notes or product features."></i>
                     </label>
                     <textarea id="Description" name="Description" class="form-control w-100 h-100" style="min-height:150px;"></textarea>
-                    <small id="descCounter" class="form-text text-muted">0 / 2000 characters</small>
+                    <small id="descCounter" class="form-text text-muted">0 / 500 characters</small>
                 </div>
                 <div class="form-group mb-2">
                     <label>Photo</label>
@@ -93,10 +93,10 @@
                     <tbody id="featureContainer">
                         <tr>
                             <td>
-                                <input type="text" class="form-control" name="Features[0].Name"/>
+                                <input type="text" class="form-control" name="Features[0].Name" placeholder="Feature name"/>
                             </td>
                             <td>
-                                <input type="text" class="form-control" name="Featured[0].Description"/>
+                                <input type="text" class="form-control" name="Features[0].Description" placeholder="Description" />
                             </td>
                             <td>
                                 <button type="button" class="btn btn-success btnAddFeature">
@@ -111,6 +111,31 @@
     </form>
 </div>
 
+<hr class="mt-5"/>
+<h3 class="text-center">List of Product and Features</h3>
+<hr />
+
+<div id="productListSection">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Date of Purchase</th>
+                <th>Availability</th>
+                <th>Photo</th>
+                <th>Features</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
 @section Scripts{
     <script>
         $(document).ready(function () {
@@ -122,7 +147,7 @@
           });
 
         $('#Description').on('input', function () {
-          $('#descCounter').text(`${this.value.length} / 2000 characters`);
+          $('#descCounter').text(`${this.value.length} / 500 characters`);
         });
 
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -133,14 +158,14 @@
 
 
 
-         function loadProducts(){
-             $.get.JSON('/Product/GetAll', function(data){
-                 let rows = '';
+         // function loadProducts(){
+         //     $.get.JSON('/Product/GetAll', function(data){
+         //         let rows = '';
                  
-             });
-         }
+         //     });
+         // }
 
-         loadProducts();
+         // loadProducts();
 
          $('#productForm').submit(function(e){
              e.preventDefault();
@@ -152,8 +177,7 @@
                  processData: false,
                  contentType: false,
                  success: function(){
-                     loadProducts();
-                     resetForm();
+                     alert('Saved product successfully!')
                  },
                  error: function(xhr){
                      console.log(xhr.response.JSON);

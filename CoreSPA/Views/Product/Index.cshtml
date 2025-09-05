@@ -29,6 +29,8 @@
                     <select class="form-select" id="CategoryId" name="CategoryId">
                         <option disabled selected value="">Select a category</option>
                     </select>
+                    <input type="text" id="NewCategoryName" class="form-control mt-2" placeholder="Enter new category" style="display:none;" />
+
                 </div>
                 <div class="form-group mb-2">
                     <label for="price">Price</label>
@@ -151,35 +153,91 @@
                     data.forEach(c => {
                         options += `<option value="${c.categoryId}">${c.name}</option>`;
                     });
+                    options += `<option value="add_new">+ Add new category...</option>`;
                     $('#CategoryId').html(options); 
                 });
             }
 
             loadCategoriesDropdown();
 
+            $('#CategoryId').change(function() {
+                if ($(this).val() === 'add_new') {
+                    $('#NewCategoryName').show().focus();
+                } else {
+                    $('#NewCategoryName').hide();
+                }
+            });
+
+             $('#NewCategoryName').on('keypress', function(e){
+                if(e.which === 13){ // Enter key
+                    let name = $(this).val().trim();
+                    if(!name) return;
+
+                    $.post('/Category/Save', { Name: name }, function(res){
+                        if(res.success){
+                            // Reload dropdown and select new category
+                            loadCategoriesDropdown();
+                            // Small delay to ensure dropdown is reloaded
+                            setTimeout(() => $('#CategoryId').val(res.categoryId), 200);
+                            $('#NewCategoryName').hide().val('');
+                        } else {
+                            alert(res.message || 'Error adding category');
+                        }
+                    });
+                }
+            });
+
+                // Save Product Form
+        $('#productForm').submit(function(e){
+            e.preventDefault();
+
+            const newCategoryName = $('#NewCategoryName').val()?.trim();
+            if(newCategoryName) {
+                // Save new category first
+                $.post('/Category/Save', { Name: newCategoryName }, function(res){
+                    if(res.success){
+                        // Set dropdown to newly created category
+                        loadCategoriesDropdown(res.categoryId);
+                        $('#NewCategoryName').hide().val('');
+                        // Now submit product
+                        submitProductForm(res.categoryId);
+                    } else {
+                        alert(res.message || 'Error adding category');
+                    }
+                });
+            } else {
+                submitProductForm();
+            }
+        });
+
+        function submitProductForm(categoryId = null) {
+            const form = $('#productForm')[0];
+            const formData = new FormData(form);
+
+            if(categoryId) {
+                formData.set('CategoryId', categoryId);
+            }
+
+            $.ajax({
+                url:'/Product/Save',
+                type:'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(){
+                    loadProducts();
+                    resetForm();
+                },
+                error: function(xhr){
+                    console.log(xhr.responseJSON); // fixed typo
+                }
+            });
+        }
+
+
+
          });
 
-
-
-         //Save Product
-         $('#productForm').submit(function(e){
-             e.preventDefault();
-             let formData = new FormData(this);
-             $.ajax({
-                 url:'/Product/Save',
-                 type:'POST',
-                 data: formData,
-                 processData: false,
-                 contentType: false,
-                 success: function(){
-                     loadProducts();
-                     resetForm();
-                 },
-                 error: function(xhr){
-                     console.log(xhr.response.JSON);
-                 }
-             })
-         });
 
          //Photo preview
          const noImageUrl = '/images/no-image.jpg';

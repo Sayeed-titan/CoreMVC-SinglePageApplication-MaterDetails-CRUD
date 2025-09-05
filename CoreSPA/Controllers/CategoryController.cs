@@ -55,16 +55,19 @@ namespace CoreSPA.Controllers
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
 
-            if(vm.CategoryId > 0)
+            Category? category;
+
+            if (vm.CategoryId > 0)
             {
-                var category = await _context.Categories.FindAsync(vm.CategoryId);
-                if (category == null) return NotFound();
+                 category = await _context.Categories.FindAsync(vm.CategoryId);
+                if (category == null)
+                    return NotFound(new { success = false, message = "Category not found." });
 
                 category.Name = vm.Name;
             }
             else
             {
-                var category = new Category
+                 category = new Category
                 {
                     Name = vm.Name
                 };
@@ -73,7 +76,7 @@ namespace CoreSPA.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true });
+            return Json(new { success = true, categoryId = category.CategoryId, categoryName = category.Name });
         }
 
         // Delete

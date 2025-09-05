@@ -1,7 +1,7 @@
-# SuperShop - Product & Category Management
+# CoreSPA- Product & Category Management
 
 ## Overview
-SuperShop is a web-based **Product & Category Management system** built with **ASP.NET Core 9**, **Entity Framework Core**, and **Bootstrap 5**.  
+CoreSPA is a web-based **Product & Category Management system** built with **ASP.NET Core 9**, **Entity Framework Core**, and **Bootstrap 5**.  
 It allows managing products, categories, and product features efficiently with a user-friendly interface.  
 
 This project demonstrates full **CRUD operations**, file uploads, dynamic forms, and real-time updates using **AJAX & jQuery**.

@@ -168,55 +168,51 @@
                 }
             });
 
-             $('#NewCategoryName').on('keypress', function(e){
-                if(e.which === 13){ // Enter key
-                    let name = $(this).val().trim();
-                    if(!name) return;
+                    // Handle Enter key for new category
+        $('#NewCategoryName').on('keypress', function(e){
+            if(e.which !== 13) return;
+            const name = $(this).val().trim();
+            if(!name) return;
 
-                    $.post('/Category/Save', { Name: name }, function(res){
-                        if(res.success){
-                            // Reload dropdown and select new category
-                            loadCategoriesDropdown();
-                            // Small delay to ensure dropdown is reloaded
-                            setTimeout(() => $('#CategoryId').val(res.categoryId), 200);
-                            $('#NewCategoryName').hide().val('');
-                        } else {
-                            alert(res.message || 'Error adding category');
-                        }
-                    });
-                }
+            saveNewCategory(name, function(categoryId){
+                loadCategoriesDropdown(categoryId);
+                $('#NewCategoryName').hide().val('');
+                submitProductForm(categoryId);
             });
+        });
 
-                // Save Product Form
+        // Product form submission
         $('#productForm').submit(function(e){
             e.preventDefault();
-
             const newCategoryName = $('#NewCategoryName').val()?.trim();
-            if(newCategoryName) {
-                // Save new category first
-                $.post('/Category/Save', { Name: newCategoryName }, function(res){
-                    if(res.success){
-                        // Set dropdown to newly created category
-                        loadCategoriesDropdown(res.categoryId);
-                        $('#NewCategoryName').hide().val('');
-                        // Now submit product
-                        submitProductForm(res.categoryId);
-                    } else {
-                        alert(res.message || 'Error adding category');
-                    }
+
+            if(newCategoryName){
+                saveNewCategory(newCategoryName, function(categoryId){
+                    loadCategoriesDropdown(categoryId);
+                    $('#NewCategoryName').hide().val('');
+                    submitProductForm(categoryId);
                 });
             } else {
                 submitProductForm();
             }
         });
 
-        function submitProductForm(categoryId = null) {
-            const form = $('#productForm')[0];
-            const formData = new FormData(form);
+        // Function to save new category
+        function saveNewCategory(name, callback){
+            $.post('/Category/Save', { Name: name }, function(res){
+                if(res.success){
+                    callback(res.categoryId);
+                    UI.toast("Category added successfully!");
+                } else {
+                    UI.toast(res.message || 'Error adding category', 'error');
+                }
+            });
+        }
 
-            if(categoryId) {
-                formData.set('CategoryId', categoryId);
-            }
+        // Submit Product Form
+        function submitProductForm(categoryId = null){
+            const formData = new FormData($('#productForm')[0]);
+            if(categoryId) formData.set('CategoryId', categoryId);
 
             $.ajax({
                 url:'/Product/Save',
@@ -227,14 +223,14 @@
                 success: function(){
                     loadProducts();
                     resetForm();
+                    UI.toast("Product saved successfully!");
                 },
                 error: function(xhr){
-                    console.log(xhr.responseJSON); // fixed typo
+                    UI.toast(xhr.responseJSON?.message || "Error saving product", 'error');
+                    console.log(xhr.responseJSON);
                 }
             });
         }
-
-
 
          });
 
@@ -371,12 +367,18 @@
         //Delete Product
         $(document).on('click', '.btnDelete', function(){
             let id = $(this).closest('tr').data('id');
-            if(confirm('Are you sure?')){
-                $.post('/Product/Delete', {id: id}, function(){
+
+            UI.confirm('Are you sure you want to delete this product?', function(){
+                $.post('/Product/Delete', { id: id }, function(){
                     loadProducts();
+                    UI.toast("Product deleted successfully!");
+                }).fail(function(xhr){
+                    const message = xhr.responseJSON?.message || "Error deleting product.";
+                    UI.toast(message, 'error');
                 });
-            }
+            });
         });
+
 
         // Reset Form
         function resetForm() {

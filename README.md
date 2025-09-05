@@ -6,6 +6,9 @@ It allows managing products, categories, and product features efficiently with a
 
 This project demonstrates full **CRUD operations**, file uploads, dynamic forms, and real-time updates using **AJAX & jQuery**.
 
+[![Play Demo](https://img.youtube.com/vi/Zgm7d92aWhk/hqdefault.jpg)](https://www.youtube.com/watch?v=Zgm7d92aWhk)
+
+
 ---
 
 ## Features

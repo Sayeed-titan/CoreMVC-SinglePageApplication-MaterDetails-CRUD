@@ -2,7 +2,93 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Welcome to CoreSPA</h1>
+        <p class="lead">A fully functional Product Management Web App built with ASP.NET Core and modern web technologies.</p>
+        <a class="btn btn-primary btn-lg mt-3" href="#functionalities">Explore Features</a>
+    </div>
+
+    <!-- Functionalities Section -->
+    <section id="functionalities" class="mb-5">
+        <h2 class="mb-4 text-center">Key Functionalities</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-box-seam display-4 mb-3 text-primary"></i>
+                        <h5 class="card-title">Product Management</h5>
+                        <p class="card-text">Add, edit, delete products with dynamic photo preview, stock status, and features management.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-card-checklist display-4 mb-3 text-success"></i>
+                        <h5 class="card-title">Category Management</h5>
+                        <p class="card-text">Create, edit, delete categories with proper validation. Prevent deletion of categories linked to products.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-journal-text display-4 mb-3 text-warning"></i>
+                        <h5 class="card-title">Features Management</h5>
+                        <p class="card-text">Add multiple features per product dynamically, with the ability to remove or add new features on the fly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologies Section -->
+    <section id="technologies" class="mb-5">
+        <h2 class="mb-4 text-center">Technologies Used</h2>
+        <div class="row justify-content-center g-3">
+            <div class="col-md-2 col-4 text-center">
+                <i class="bi bi-file-code-fill display-3 text-info"></i>
+                <p class="mt-2">ASP.NET Core 8.0</p>
+            </div>
+            <div class="col-md-2 col-4 text-center">
+                <i class="bi bi-bootstrap-fill display-3 text-purple"></i>
+                <p class="mt-2">Bootstrap 5</p>
+            </div>
+            <div class="col-md-2 col-4 text-center">
+                <i class="bi bi-javascript display-3 text-warning"></i>
+                <p class="mt-2">jQuery & JS</p>
+            </div>
+            <div class="col-md-2 col-4 text-center">
+                <i class="bi bi-database-fill display-3 text-success"></i>
+                <p class="mt-2">Entity Framework Core</p>
+            </div>
+            <div class="col-md-2 col-4 text-center">
+                <i class="bi bi-images display-3 text-danger"></i>
+                <p class="mt-2">File Upload / Image Preview</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About / Learn More -->
+    <div class="text-center mt-5">
+        <p class="lead">Explore the source code and learn more about this project on <a href="https://github.com/Sayeed-titan/CoreMVC-SinglePageApplication-MaterDetails-CRUD.git" target="_blank">GitHub</a>.</p>
+        <a class="btn btn-outline-primary btn-lg" href="/Product">Go to Products</a>
+    </div>
+
 </div>
+
+
+@section Styles{
+    <style>
+        .card i {
+            font-size: 3rem;
+        }
+
+        .text-purple {
+            color: #6f42c1;
+        }
+    </style>
+}

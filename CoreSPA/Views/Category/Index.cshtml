@@ -30,7 +30,7 @@
     <table class="table table-bordered mt-3" id="categoryTable">
         <thead>
             <tr >
-                <th>Sl.</th>
+                <th style="width: 70px;" class="text-center">Sl.</th>
                 <th>Name</th>
                 <th style="width: 150px;">Actions</th>
             </tr>
@@ -40,3 +40,61 @@
 
 </div>
 
+@section Scripts{
+    <script>
+
+        $(document).ready(function(){
+
+                loadCategoris();
+
+                 function loadCategoris(){
+                $.getJSON('/Category/GetAll', function (data){
+                    let rows = '';
+                    let count = 1;
+                    data.forEach(function (c){
+                        rows +=`
+                            <tr>
+                                <td class="text-center">${count++}</td>
+                                <td>${c.name}</td>
+                                <td>
+                                    <button class="btn btn-info text-white btn-edit" data-id="${c.categoryId}"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-danger btn-delete"><i class="bi bi-trash" data-id="${c.categoryId}"></i></button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    $('#categoryTable tbody').html(rows);
+                });
+            }
+
+            //Save
+            $('#categoryForm').submit(function(e){
+                e.preventDefault();
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '/Category/Save',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(){
+                        loadCategoris();
+                        //reset form
+                    },
+                    error: function(err){
+                        alert('Errror: ' + JSON.stringify (err.responseJSON ));
+                    }
+                });
+            });
+
+
+
+
+        })
+
+
+
+    </script>
+}
